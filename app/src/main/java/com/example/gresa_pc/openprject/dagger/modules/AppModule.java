@@ -1,5 +1,7 @@
 package com.example.gresa_pc.openprject.dagger.modules;
 
+import android.app.Application;
+
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.presenter.ParkingSitesEngine;
 import com.google.gson.Gson;
@@ -12,10 +14,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
-public class AppModule {
+public class AppModule extends Application{
     @Provides
     @Singleton
-    ParkingSitesEngine provideParkingSitesEngine() { return new ParkingSitesEngine(apiService()); }
+    ParkingSitesEngine provideParkingSitesEngine() { return new ParkingSitesEngine(view, apiService()); }
 
     @Provides
     @Singleton

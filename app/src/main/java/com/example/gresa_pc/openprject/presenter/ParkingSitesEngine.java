@@ -1,8 +1,14 @@
 package com.example.gresa_pc.openprject.presenter;
 
 import android.util.Log;
+
+import com.example.gresa_pc.openprject.model.ParkingSite;
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.model.ParkingSiteLocation;
+import com.example.gresa_pc.openprject.ui.view.ParkingSitesView;
+
+import java.util.List;
+
 import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,11 +21,12 @@ import static com.google.android.gms.wearable.DataMap.TAG;
  */
 
 public class ParkingSitesEngine {
-    ParkingSiteLocation result = null;
+    private final ParkingSitesView view;
     @Inject
     ApiService apiService;
 
-    public ParkingSitesEngine(ApiService apiService) {
+    public ParkingSitesEngine(ParkingSitesView view, ApiService apiService) {
+        this.view = view;
         this.apiService = apiService;
     }
 
@@ -29,12 +36,14 @@ public class ParkingSitesEngine {
             @Override
             public void onResponse(Call<ParkingSiteLocation> call, Response<ParkingSiteLocation> response) {
                 Log.d(TAG, "onSuccess");
-                result = response.body();
+                List<ParkingSite> parkingSiteLocation = response.body().getParkingSites();
+                view.onParkingSitesListLoadSuccess(parkingSiteLocation);
             }
 
             @Override
             public void onFailure(Call<ParkingSiteLocation> call, Throwable t) {
                 Log.d(TAG, "onFailure" + t.getMessage());
+                view.onParkingSitesListLoadFailure();
             }
         });
     }
