@@ -2,26 +2,34 @@ package com.example.gresa_pc.openprject;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-
+import com.example.gresa_pc.openprject.dagger.DaggerInjector;
+import com.example.gresa_pc.openprject.presenter.ParkingSitesEngine;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import javax.inject.Inject;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    @Inject
+    ParkingSitesEngine engine;
     private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        DaggerInjector.get().inject(this);
+        engine.getParkings();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
     }
 
 
