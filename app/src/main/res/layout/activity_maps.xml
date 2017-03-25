@@ -1,8 +1,53 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.gresa_pc.openprject.MapsActivity" />
+    tools:context=".MapsActivity" >
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.gresa_pc.openprject.MapsActivity"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/white"
+        tools:layout_editor_absoluteY="-62dp"
+        tools:layout_editor_absoluteX="-89dp">
+
+        <EditText
+            android:id="@+id/etFrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="From" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:background="@android:color/white"
+            android:layout_height="50dp"
+            android:layout_marginTop="48dp"
+            tools:layout_editor_absoluteY="-89dp"
+            tools:layout_editor_absoluteX="-100dp">
+
+            <EditText
+                android:id="@+id/etTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="To" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:text="Search"
+        android:layout_width="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="94dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/button2"
+        android:layout_weight="1" />
+</FrameLayout>

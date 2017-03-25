@@ -3,7 +3,6 @@ package com.example.gresa_pc.openprject;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.model.Location;
 import com.example.gresa_pc.openprject.model.ParkingSite;
@@ -16,10 +15,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.io.IOException;
 import java.util.List;
-
 import javax.inject.Inject;
 import static com.google.android.gms.wearable.DataMap.TAG;
 
@@ -71,8 +67,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in "+parkingSite.getTitle()));
             CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(latLng)      // Sets the center of the map to Mountain View
-                    .zoom(7)                   // Sets the zoom
+                    .target(latLng)             // Sets the center of the map to Mountain View
+                    .zoom(7)                    // Sets the zoom
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
