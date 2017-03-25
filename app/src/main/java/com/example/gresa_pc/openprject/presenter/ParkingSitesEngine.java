@@ -1,19 +1,15 @@
 package com.example.gresa_pc.openprject.presenter;
 
 import android.util.Log;
-
 import com.example.gresa_pc.openprject.model.ParkingSite;
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.model.ParkingSiteLocation;
 import com.example.gresa_pc.openprject.ui.view.ParkingSitesView;
-
 import java.util.List;
-
 import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 /**
@@ -23,18 +19,17 @@ import static com.google.android.gms.wearable.DataMap.TAG;
 public class ParkingSitesEngine {
 
     private ParkingSitesView view;
-
-    @Inject
     ApiService apiService;
 
     public ParkingSitesEngine(ApiService apiService) {
         this.apiService = apiService;
     }
 
-    public void setParkingSitesView(ParkingSitesView view){
+    public void setView(ParkingSitesView view){
         this.view = view;
     }
-    public void getParkings() {
+
+    public void getParkings(){
         Call<ParkingSiteLocation> call = this.apiService.getParkingLocation();
         call.enqueue(new Callback<ParkingSiteLocation>() {
             @Override

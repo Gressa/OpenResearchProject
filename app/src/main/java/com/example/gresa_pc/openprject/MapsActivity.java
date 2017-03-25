@@ -2,10 +2,11 @@ package com.example.gresa_pc.openprject;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import com.example.gresa_pc.openprject.dagger.DaggerInjector;
+import android.util.Log;
+
+import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.model.Location;
 import com.example.gresa_pc.openprject.model.ParkingSite;
-import com.example.gresa_pc.openprject.model.ParkingSiteLocation;
 import com.example.gresa_pc.openprject.presenter.ParkingSitesEngine;
 import com.example.gresa_pc.openprject.ui.view.ParkingSitesView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -15,9 +16,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+import static com.google.android.gms.wearable.DataMap.TAG;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ParkingSitesView {
 
@@ -29,8 +33,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-       // DaggerInjector.getAppComponent().inject(this);
-        ((DaggerInjector) getApplication()).getAppComponent().inject(this);
+       // App.getAppComponent().inject(this);
+        ((App) getApplication()).getAppComponent().inject(this);
+        engine.setView(this);
         engine.getParkings();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -64,11 +69,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Location location = parkingSite.getLocation();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in "+parkingSite.getTitle()));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }
     }
 
     @Override
     public void onParkingSitesListLoadFailure() {
-
+        Log.d(TAG, "mainFailure");
     }
 }

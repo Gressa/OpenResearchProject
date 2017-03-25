@@ -1,8 +1,6 @@
 package com.example.gresa_pc.openprject.ui.view;
 
 import com.example.gresa_pc.openprject.model.ParkingSite;
-import com.example.gresa_pc.openprject.model.ParkingSiteLocation;
-
 import java.util.List;
 
 /**
