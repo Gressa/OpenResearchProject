@@ -24,7 +24,7 @@
             android:id="@+id/etFrom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="From" />
+            android:hint="@string/hint_from"/>
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -39,11 +39,11 @@
                 android:id="@+id/etTo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="To" />
+                android:hint="@string/hint_to"/>
     </android.support.design.widget.TextInputLayout>
 
     <Button
-        android:text="Search"
+        android:text="@string/btn_search"
         android:layout_width="wrap_content"
         android:layout_gravity="right"
         android:layout_marginTop="94dp"
