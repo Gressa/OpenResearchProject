@@ -15,9 +15,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class AppModule extends Application{
+
     @Provides
     @Singleton
-    ParkingSitesEngine provideParkingSitesEngine() { return new ParkingSitesEngine(view, apiService()); }
+    ParkingSitesEngine provideParkingSitesEngine() { return new ParkingSitesEngine(apiService()); }
 
     @Provides
     @Singleton

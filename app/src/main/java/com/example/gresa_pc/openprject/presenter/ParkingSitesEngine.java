@@ -21,15 +21,19 @@ import static com.google.android.gms.wearable.DataMap.TAG;
  */
 
 public class ParkingSitesEngine {
-    private final ParkingSitesView view;
+
+    private ParkingSitesView view;
+
     @Inject
     ApiService apiService;
 
-    public ParkingSitesEngine(ParkingSitesView view, ApiService apiService) {
-        this.view = view;
+    public ParkingSitesEngine(ApiService apiService) {
         this.apiService = apiService;
     }
 
+    public void setParkingSitesView(ParkingSitesView view){
+        this.view = view;
+    }
     public void getParkings() {
         Call<ParkingSiteLocation> call = this.apiService.getParkingLocation();
         call.enqueue(new Callback<ParkingSiteLocation>() {
