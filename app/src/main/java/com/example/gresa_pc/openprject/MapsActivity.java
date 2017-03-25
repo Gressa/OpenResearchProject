@@ -3,6 +3,9 @@ package com.example.gresa_pc.openprject;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+
 import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.model.Location;
 import com.example.gresa_pc.openprject.model.ParkingSite;
@@ -17,20 +20,29 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ParkingSitesView {
-
+    private GoogleMap mMap;
     @Inject
     ParkingSitesEngine engine;
-    private GoogleMap mMap;
+    @BindView(R.id.etFrom)
+    EditText etFrom;
+    @BindView(R.id.etTo)
+    EditText etTo;
+    @BindView(R.id.btn_search)
+    Button btnSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-       // App.getAppComponent().inject(this);
+        ButterKnife.bind(this);
         ((App) getApplication()).getAppComponent().inject(this);
         engine.setView(this);
         engine.getParkings();
