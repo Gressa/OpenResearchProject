@@ -13,6 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -69,7 +70,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Location location = parkingSite.getLocation();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker in "+parkingSite.getTitle()));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng)      // Sets the center of the map to Mountain View
+                    .zoom(7)                   // Sets the zoom
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
 
