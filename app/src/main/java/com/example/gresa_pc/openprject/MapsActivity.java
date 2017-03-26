@@ -7,9 +7,11 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.example.gresa_pc.openprject.dagger.App;
-import com.example.gresa_pc.openprject.model.DirectionFinder;
-import com.example.gresa_pc.openprject.model.DirectionFinderListener;
+import com.example.gresa_pc.openprject.presenter.DirectionFinderEngine;
+import com.example.gresa_pc.openprject.ui.view.DirectionFinderView;
 import com.example.gresa_pc.openprject.model.Location;
 import com.example.gresa_pc.openprject.model.ParkingSite;
 import com.example.gresa_pc.openprject.model.Route;
@@ -19,7 +21,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -37,7 +38,7 @@ import butterknife.OnClick;
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ParkingSitesView ,DirectionFinderListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ParkingSitesView ,DirectionFinderView {
     private GoogleMap mMap;
     @Inject
     ParkingSitesEngine engine;
@@ -68,15 +69,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.btn_search)
     public void btn_search(){
         Log.d(TAG,"Button clicked");
-        LatLng from = getLocationFromAddress(this,etFrom.getText().toString());
-        originMarkers.add(mMap.addMarker(new MarkerOptions().position(from)));
-        LatLng to = getLocationFromAddress(this,etTo.getText().toString());
-        if(from.toString() != null && to.toString() != null)
+        Log.d(TAG,etFrom.getText().toString());
+        Log.d(TAG,etTo.getText().toString());
+        if(etFrom.getText().toString().isEmpty() || etTo.getText().toString().isEmpty())
         {
+            Toast.makeText(this, "Please fill text fields",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            LatLng from = getLocationFromAddress(this, etFrom.getText().toString());
+            originMarkers.add(mMap.addMarker(new MarkerOptions().position(from)));
+            LatLng to = getLocationFromAddress(this, etTo.getText().toString());
             mMap.clear();
-
             try {
-                new DirectionFinder(this, etFrom.getText().toString(), etTo.getText().toString()).execute();
+                new DirectionFinderEngine(this, etFrom.getText().toString(), etTo.getText().toString()).execute();
+
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -100,6 +107,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onParkingSitesListLoadSuccess(List<ParkingSite> parkingSites) {
+        drawParkingSites(parkingSites);
+    }
+
+    @Override
+    public void onParkingSitesListLoadFailure() {
+        Log.d(TAG, "mainFailure");
+    }
+
+
+    public void drawParkingSites(List<ParkingSite> parkingSites) {
         for (ParkingSite parkingSite:parkingSites) {
             Location location = parkingSite.getLocation();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -110,11 +127,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-    }
-
-    @Override
-    public void onParkingSitesListLoadFailure() {
-        Log.d(TAG, "mainFailure");
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {

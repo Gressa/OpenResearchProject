@@ -1,9 +1,14 @@
-package com.example.gresa_pc.openprject.model;
+package com.example.gresa_pc.openprject.presenter;
 
 /**
  * Created by Gresa-PC on 3/26/2017.
  */
 import android.os.AsyncTask;
+
+import com.example.gresa_pc.openprject.model.Distance;
+import com.example.gresa_pc.openprject.model.Duration;
+import com.example.gresa_pc.openprject.model.Route;
+import com.example.gresa_pc.openprject.ui.view.DirectionFinderView;
 import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,25 +24,24 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
 
-
-public class DirectionFinder {
+public class DirectionFinderEngine {
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
     private static final String GOOGLE_API_KEY = "AIzaSyBMXirpILQ3x7CXtTKsA8-H8JQ4ngQmXo4";
-    private DirectionFinderListener listener;
+    private DirectionFinderView view;
     private String origin;
     private String destination;
 
-    public DirectionFinder(DirectionFinderListener listener, String origin, String destination) {
-        this.listener = listener;
+    public DirectionFinderEngine(DirectionFinderView view, String origin, String destination) {
+        this.view = view;
         this.origin = origin;
         this.destination = destination;
     }
 
     public void execute() throws UnsupportedEncodingException {
-        listener.onDirectionFinderStart();
+        view.onDirectionFinderStart();
         new DownloadRawData().execute(createUrl());
+
     }
 
     private String createUrl() throws UnsupportedEncodingException {
@@ -113,7 +117,7 @@ public class DirectionFinder {
             routes.add(route);
         }
 
-        listener.onDirectionFinderSuccess(routes);
+        view.onDirectionFinderSuccess(routes);
     }
 
     private List<LatLng> decodePolyLine(final String poly) {
