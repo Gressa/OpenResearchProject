@@ -7,7 +7,7 @@ import com.example.gresa_pc.openprject.dagger.modules.AppModule;
 
 public class App extends Application{
    // private static AppComponent appComponent = DaggerAppComponent.builder().build();
-    AppComponent appComponent;
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {

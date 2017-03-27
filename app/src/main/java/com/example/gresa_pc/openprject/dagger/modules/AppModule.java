@@ -1,19 +1,17 @@
 package com.example.gresa_pc.openprject.dagger.modules;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.example.gresa_pc.openprject.dagger.App;
+import com.example.gresa_pc.openprject.presenter.DirectionFinderEngine;
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.presenter.ParkingSitesEngine;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -25,9 +23,18 @@ public class AppModule extends Application{
         this.app = app;
     }
 
+//    @Provides @Singleton
+//    public Context provideContext() {
+//        return app;
+//    }
+
     @Provides
     @Singleton
     ParkingSitesEngine provideParkingSitesEngine() { return new ParkingSitesEngine(apiService()); }
+
+    @Provides
+    @Singleton
+    DirectionFinderEngine directionFinderEngine(){return new DirectionFinderEngine();}
 
     @Provides
     @Singleton
@@ -37,7 +44,7 @@ public class AppModule extends Application{
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.109:81/")
+                .baseUrl("http://192.168.0.163:81/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

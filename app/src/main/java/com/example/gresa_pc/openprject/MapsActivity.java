@@ -42,6 +42,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     @Inject
     ParkingSitesEngine engine;
+    @Inject
+    DirectionFinderEngine directionFinderEngine;
     @BindView(R.id.etFrom)
     EditText etFrom;
     @BindView(R.id.etTo)
@@ -69,8 +71,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @OnClick(R.id.btn_search)
     public void btn_search(){
         Log.d(TAG,"Button clicked");
-        Log.d(TAG,etFrom.getText().toString());
-        Log.d(TAG,etTo.getText().toString());
         if(etFrom.getText().toString().isEmpty() || etTo.getText().toString().isEmpty())
         {
             Toast.makeText(this, "Please fill text fields",Toast.LENGTH_SHORT).show();
@@ -82,7 +82,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng to = getLocationFromAddress(this, etTo.getText().toString());
             mMap.clear();
             try {
-                new DirectionFinderEngine(this, etFrom.getText().toString(), etTo.getText().toString()).execute();
+                directionFinderEngine.setView(this);
+                directionFinderEngine.setOrigin(etFrom.getText().toString());
+                directionFinderEngine.setDestination(etTo.getText().toString());
+                directionFinderEngine.execute();
+                //new DirectionFinderEngine(etFrom.getText().toString(), etTo.getText().toString()).execute();
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();

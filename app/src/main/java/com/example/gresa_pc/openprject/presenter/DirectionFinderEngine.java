@@ -32,9 +32,25 @@ public class DirectionFinderEngine {
     private String origin;
     private String destination;
 
-    public DirectionFinderEngine(DirectionFinderView view, String origin, String destination) {
+    public DirectionFinderEngine() {
+    }
+
+//        public DirectionFinderEngine(DirectionFinderEngine view, String origin, String destination) {
+//        this.view = view;
+//        this.origin = origin;
+//        this.destination = destination;
+//    }
+
+
+    public void setView(DirectionFinderView view) {
         this.view = view;
+    }
+
+    public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public void setDestination(String destination) {
         this.destination = destination;
     }
 
