@@ -8,7 +8,9 @@ import android.widget.Toast;
 import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.model.ParkingSite;
 import com.example.gresa_pc.openprject.model.Route;
+import com.example.gresa_pc.openprject.presenter.DirectionFinderPresenter;
 import com.example.gresa_pc.openprject.presenter.ParkingSitesPresenter;
+import com.example.gresa_pc.openprject.ui.view.DirectionFinderContract;
 import com.example.gresa_pc.openprject.ui.view.ParkingSitesContract;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,7 +23,7 @@ import butterknife.OnClick;
 import static com.google.android.gms.wearable.DataMap.TAG;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ParkingSitesContract.View{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ParkingSitesContract.View, DirectionFinderContract.View{
     private static final String GOOGLE_API_KEY = "AIzaSyBMXirpILQ3x7CXtTKsA8-H8JQ4ngQmXo4";
     private GoogleMap mMap;
     @BindView(R.id.etFrom)
@@ -31,6 +33,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Inject
     ParkingSitesPresenter mParkingSitesPresenter;
+    @Inject
+    DirectionFinderPresenter mDirectionFinderPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         else {
             mMap.clear();
-          //  mDirectionFinderPresenter.onResume(this,etFrom.getText().toString(), etTo.getText().toString(),GOOGLE_API_KEY, true);
+            mDirectionFinderPresenter.onResume(this,etFrom.getText().toString(), etTo.getText().toString(),GOOGLE_API_KEY, true);
         }
     }
 
@@ -83,6 +87,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
+    public void showListRoutes(List<Route> routes) {
+        mDirectionFinderPresenter.onShowDrivingRouteBetweenTwoLocations(mMap, routes);
+    }
+
+    @Override
     public void showMessageOnFailure(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
@@ -91,6 +100,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void showMessageOnEmptyParkingSites(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
-
-
 }

@@ -2,6 +2,8 @@ package com.example.gresa_pc.openprject.dagger.modules;
 
 import android.content.Context;
 import com.example.gresa_pc.openprject.dagger.App;
+import com.example.gresa_pc.openprject.engine.DirectionFinderEngine;
+import com.example.gresa_pc.openprject.presenter.DirectionFinderPresenter;
 import com.example.gresa_pc.openprject.presenter.ParkingSitesPresenter;
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.engine.ParkingSitesEngine;
@@ -39,17 +41,17 @@ public class AppModule{
         return new ParkingSitesPresenter(parkingSitesEngine);
     }
 
-//    @Provides
-//    @Singleton
-//    DirectionFinderEngine provideDirectionFinderEngine(GoogleApiService googleApiService){
-//        return new DirectionFinderEngine(googleApiService);
-//    }
-//
-//    @Provides
-//    @Singleton
-//    DirectionFinderPresenter provideDirectionFinderPresenter(DirectionFinderEngine directionFinderEngine){
-//        return new DirectionFinderPresenter(directionFinderEngine);
-//    }
+    @Provides
+    @Singleton
+    DirectionFinderEngine provideDirectionFinderEngine(GoogleApiService googleApiService){
+        return new DirectionFinderEngine(googleApiService);
+    }
+
+    @Provides
+    @Singleton
+    DirectionFinderPresenter provideDirectionFinderPresenter(DirectionFinderEngine directionFinderEngine){
+        return new DirectionFinderPresenter(directionFinderEngine);
+    }
 
     @Provides
     @Singleton
