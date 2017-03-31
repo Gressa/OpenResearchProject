@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.gresa_pc.openprject.dagger.App;
+import com.example.gresa_pc.openprject.model.Location;
 import com.example.gresa_pc.openprject.model.ParkingSite;
 import com.example.gresa_pc.openprject.model.Route;
 import com.example.gresa_pc.openprject.presenter.DirectionFinderPresenter;
@@ -15,12 +16,17 @@ import com.example.gresa_pc.openprject.ui.view.ParkingSitesContract;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.PolyUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import static com.google.android.gms.wearable.DataMap.TAG;
+import static com.google.maps.android.PolyUtil.decode;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ParkingSitesContract.View, DirectionFinderContract.View{
@@ -35,6 +41,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ParkingSitesPresenter mParkingSitesPresenter;
     @Inject
     DirectionFinderPresenter mDirectionFinderPresenter;
+
+    List<Route> routes = new ArrayList<>();
+    List<ParkingSite> parkingSites = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         else {
             mMap.clear();
-            mDirectionFinderPresenter.onResume(this,etFrom.getText().toString(), etTo.getText().toString(),GOOGLE_API_KEY, true);
+            mDirectionFinderPresenter.onResume(this,etFrom.getText().toString(), etTo.getText().toString(),GOOGLE_API_KEY, false);
         }
     }
 
@@ -83,11 +93,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void showAllParkingSites(List<ParkingSite> parkingSites) {
+        this.parkingSites = parkingSites;
         mParkingSitesPresenter.onDrawParkingSites(parkingSites,mMap);
     }
 
     @Override
     public void showListRoutes(List<Route> routes) {
+        this.routes = routes;
         mDirectionFinderPresenter.onShowDrivingRouteBetweenTwoLocations(mMap, routes);
     }
 
@@ -99,5 +111,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void showMessageOnEmptyParkingSites(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showNearParkingSites()
+    {
+        mDirectionFinderPresenter.onShowNearParkingSites(parkingSites,routes,mMap);
+    }
+
+    @Override
+    public void showNearParkingSitesOnMap(List<ParkingSite> parkingSites, GoogleMap map) {
+        mDirectionFinderPresenter.onShowNearParkingSitesOnMap(parkingSites, map);
     }
 }

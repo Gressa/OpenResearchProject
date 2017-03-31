@@ -38,7 +38,7 @@ public class ParkingSitesPresenter implements ParkingSitesContract.Presenter, IP
             mMap.addMarker(new MarkerOptions().position(latLng).title(parkingSite.getTitle()));
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)             // Sets the center of the map to Mountain View
-                    .zoom(6)                    // Sets the zoom
+                    .zoom(15)                    // Sets the zoom
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
