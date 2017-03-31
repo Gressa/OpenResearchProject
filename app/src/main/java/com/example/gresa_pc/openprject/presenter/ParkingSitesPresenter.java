@@ -27,6 +27,7 @@ public class ParkingSitesPresenter implements ParkingSitesContract.Presenter, IP
     @Override
     public void onResume(ParkingSitesContract.View view) {
         this.mView = view;
+        mView.showProgressDialog();
         mIParkingSiteEngine.getParkings(this);
     }
 
@@ -49,10 +50,12 @@ public class ParkingSitesPresenter implements ParkingSitesContract.Presenter, IP
         List<ParkingSite> allParkingSites = parkingSites;
         if(allParkingSites != null && allParkingSites.size()>0){
             mView.showAllParkingSites(allParkingSites);
+            mView.hideProgressDialog();
         }
         else {
             String message = "There is no Parking Sites";
             mView.showMessageOnEmptyParkingSites(message);
+            mView.hideProgressDialog();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.gresa_pc.openprject;
 
+import android.app.ProgressDialog;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,7 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     List<Route> routes = new ArrayList<>();
     List<ParkingSite> parkingSites = new ArrayList<>();
-
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
         ((App) getApplication()).getAppComponent().inject(this);
+        progressDialog = new ProgressDialog(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -61,6 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume(){
         super.onResume();
+        //progressDialog.show();
         mParkingSitesPresenter.onResume(this);
     }
 
@@ -110,6 +113,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void showMessageOnEmptyParkingSites(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void showProgressDialog(){
+        progressDialog.show();
+    }
+
+    @Override
+    public  void hideProgressDialog(){
+        progressDialog.dismiss();
     }
 
     @Override

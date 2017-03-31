@@ -15,6 +15,8 @@ public class ParkingSitesContract {
         void showAllParkingSites(List<ParkingSite> parkingSites);
         void showMessageOnFailure(String message);
         void showMessageOnEmptyParkingSites(String message);
+        void showProgressDialog();
+        void hideProgressDialog();
     }
 
     public interface Presenter{
