@@ -29,13 +29,13 @@ public class ParkingSitesEngine implements IParkingSitesEngine {
         call.enqueue(new Callback<ParkingSiteLocation>() {
             @Override
             public void onResponse(Call<ParkingSiteLocation> call, Response<ParkingSiteLocation> response) {
-                Log.d(TAG, "onSuccess");
+                //Log.d(TAG, "onSuccess");
                 List<ParkingSite> parkingSiteLocation = response.body().getParkingSites();
                 listener.onLoaded(parkingSiteLocation);
             }
             @Override
             public void onFailure(Call<ParkingSiteLocation> call, Throwable t) {
-                Log.d(TAG, "onFailure" + t.getMessage());
+                //Log.d(TAG, "onFailure" + t.getMessage());
                 listener.onError(t.getMessage());
             }
         });

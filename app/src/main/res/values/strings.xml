@@ -4,4 +4,5 @@
     <string name="btn_search">Search</string>
     <string name="hint_from">From</string>
     <string name="hint_to">To</string>
+    <string name="fillTextFields">Please fill text fields</string>
 </resources>

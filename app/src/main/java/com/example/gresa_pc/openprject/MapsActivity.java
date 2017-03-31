@@ -66,14 +66,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @OnClick(R.id.btn_search)
     public void btn_search(){
-        Log.d(TAG,"Button clicked");
         if(etFrom.getText().toString().isEmpty() || etTo.getText().toString().isEmpty())
         {
-            Toast.makeText(this, "Please fill text fields",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,R.string.fillTextFields,Toast.LENGTH_SHORT).show();
         }
         else {
             mMap.clear();
-            mDirectionFinderPresenter.onResume(this,etFrom.getText().toString(), etTo.getText().toString(),GOOGLE_API_KEY, false);
+            mDirectionFinderPresenter.onResume(this,etFrom.getText().toString(), etTo.getText().toString(), GOOGLE_API_KEY, false);
         }
     }
 

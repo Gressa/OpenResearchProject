@@ -61,7 +61,7 @@ public class AppModule{
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.163:81/")
+                .baseUrl("http://192.168.43.53:81/")
 //                .baseUrl("http://192.168.1.109:81/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
