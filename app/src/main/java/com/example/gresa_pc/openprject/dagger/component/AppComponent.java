@@ -5,9 +5,10 @@ import com.example.gresa_pc.openprject.dagger.modules.AppModule;
 import javax.inject.Singleton;
 import dagger.Component;
 
-
-@Component(modules = {AppModule.class})
 @Singleton
+@Component(modules = {AppModule.class})
 public interface AppComponent {
-    void inject(MapsActivity activity);
+    void inject(MapsActivity mainActivity);
+   // void inject(ParkingSitesEngine parkingSitesEngine);
+   // void inject(DirectionFinderEngine directionFinderEngine);
 }
