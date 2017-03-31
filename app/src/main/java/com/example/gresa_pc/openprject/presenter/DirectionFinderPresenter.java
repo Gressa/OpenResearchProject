@@ -34,6 +34,7 @@ public class DirectionFinderPresenter implements DirectionFinderContract.Present
     @Override
     public void onResume(DirectionFinderContract.View view, String origin, String destination, String key, boolean alternatives) {
         this.mView = view;
+        mView.showProgressDialog();
         mIDirectionFinderEngine.getDirectionRoutes(this,origin,destination,key, alternatives);
     }
 
@@ -79,7 +80,7 @@ public class DirectionFinderPresenter implements DirectionFinderContract.Present
             map.addMarker(new MarkerOptions().position(latLng).title(parkingSite.getTitle()));
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)             // Sets the center of the map to Mountain View
-                    .zoom(8)                    // Sets the zoom
+                    .zoom(7)                    // Sets the zoom
                     .build();                   // Creates a CameraPosition from the builder
             map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
@@ -88,11 +89,13 @@ public class DirectionFinderPresenter implements DirectionFinderContract.Present
     @Override
     public void onLoaded(List<Route> routes) {
         mView.showListRoutes(routes);
+        mView.hideProgressDialog();
     }
 
     @Override
     public void onError(String message) {
         mView.showMessageOnFailure(message);
+        mView.hideProgressDialog();
     }
 }
 

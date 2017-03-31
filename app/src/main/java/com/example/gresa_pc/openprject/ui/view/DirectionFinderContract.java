@@ -18,6 +18,8 @@ public class DirectionFinderContract {
         void showMessageOnFailure(String message);
         void showNearParkingSites();
         void showNearParkingSitesOnMap(List<ParkingSite> parkingSites, GoogleMap googleMap);
+        void showProgressDialog();
+        void hideProgressDialog();
     }
 
     public interface Presenter{
