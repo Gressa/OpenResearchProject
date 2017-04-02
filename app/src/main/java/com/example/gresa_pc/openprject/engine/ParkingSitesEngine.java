@@ -4,7 +4,8 @@ import android.util.Log;
 import com.example.gresa_pc.openprject.model.ParkingSite;
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.model.ParkingSiteLocation;
-import com.example.gresa_pc.openprject.ui.view.IParkingSitesEngine;
+import com.example.gresa_pc.openprject.ui.view.ParkingSitesContract;
+
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,7 +16,7 @@ import static com.google.android.gms.wearable.DataMap.TAG;
  * Created by Gresa-PC on 3/23/2017.
  */
 
-public class ParkingSitesEngine implements IParkingSitesEngine {
+public class ParkingSitesEngine implements ParkingSitesContract {
    private ApiService mApiService;
 //    @Inject ApiService mApiService;
 
@@ -24,19 +25,19 @@ public class ParkingSitesEngine implements IParkingSitesEngine {
     }
 
     @Override
-    public void getParkings(final LoadListener listener){
+    public void getParkings(final LoadListenerParkingSites listener){
         Call<ParkingSiteLocation> call = mApiService.getParkingLocation();
         call.enqueue(new Callback<ParkingSiteLocation>() {
             @Override
             public void onResponse(Call<ParkingSiteLocation> call, Response<ParkingSiteLocation> response) {
-                //Log.d(TAG, "onSuccess");
+                Log.d(TAG, "onSuccess");
                 List<ParkingSite> parkingSiteLocation = response.body().getParkingSites();
-                listener.onLoaded(parkingSiteLocation);
+                listener.onLoadedParkingSites(parkingSiteLocation);
             }
             @Override
             public void onFailure(Call<ParkingSiteLocation> call, Throwable t) {
-                //Log.d(TAG, "onFailure" + t.getMessage());
-                listener.onError(t.getMessage());
+                Log.d(TAG, "onFailure" + t.getMessage());
+                listener.onErrorParkingSites(t.getMessage());
             }
         });
     }

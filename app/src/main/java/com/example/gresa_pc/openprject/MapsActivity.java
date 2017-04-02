@@ -3,34 +3,21 @@ package com.example.gresa_pc.openprject;
 import android.app.ProgressDialog;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.gresa_pc.openprject.dagger.App;
-import com.example.gresa_pc.openprject.model.Location;
-import com.example.gresa_pc.openprject.model.ParkingSite;
-import com.example.gresa_pc.openprject.model.Route;
-import com.example.gresa_pc.openprject.presenter.DirectionFinderPresenter;
-import com.example.gresa_pc.openprject.presenter.ParkingSitesPresenter;
-import com.example.gresa_pc.openprject.ui.view.DirectionFinderContract;
-import com.example.gresa_pc.openprject.ui.view.ParkingSitesContract;
+import com.example.gresa_pc.openprject.presenter.MapsPresenter;
+import com.example.gresa_pc.openprject.ui.view.MapsView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.PolyUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import static com.google.android.gms.wearable.DataMap.TAG;
-import static com.google.maps.android.PolyUtil.decode;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ParkingSitesContract.View, DirectionFinderContract.View{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, MapsView {
     private static final String GOOGLE_API_KEY = "AIzaSyBMXirpILQ3x7CXtTKsA8-H8JQ4ngQmXo4";
     private GoogleMap mMap;
     @BindView(R.id.etFrom)
@@ -39,13 +26,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     EditText etTo;
 
     @Inject
-    ParkingSitesPresenter mParkingSitesPresenter;
-    @Inject
-    DirectionFinderPresenter mDirectionFinderPresenter;
+    MapsPresenter mMapPresenter;
 
-    List<Route> routes = new ArrayList<>();
-    List<ParkingSite> parkingSites = new ArrayList<>();
-    ProgressDialog progressDialog;
+    ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +36,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
         ((App) getApplication()).getAppComponent().inject(this);
-        progressDialog = new ProgressDialog(this);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Loading");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -63,19 +46,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume(){
         super.onResume();
-        //progressDialog.show();
-        mParkingSitesPresenter.onResume(this);
+//        mParkingSitesPresenter.onResumeParkingSites(this,mMap);
     }
 
-    @OnClick(R.id.btn_search)
-    public void btn_search(){
-        if(etFrom.getText().toString().isEmpty() || etTo.getText().toString().isEmpty())
-        {
-            Toast.makeText(this,R.string.fillTextFields,Toast.LENGTH_SHORT).show();
-        }
-        else {
+    @OnClick(R.id.btn_searchLocations)
+    public void btn_searchLocations(){
+        boolean validInputs = mMapPresenter.validateInputs(etFrom.getText().toString(),etTo.getText().toString());
+        if(validInputs){
             mMap.clear();
-            mDirectionFinderPresenter.onResume(this,etFrom.getText().toString(), etTo.getText().toString(), GOOGLE_API_KEY, false);
+            mMapPresenter.onResumeDirectionFinder(this,mMap,etFrom.getText().toString(), etTo.getText().toString(), GOOGLE_API_KEY, false);
         }
     }
 
@@ -91,18 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-    }
-
-    @Override
-    public void showAllParkingSites(List<ParkingSite> parkingSites) {
-        this.parkingSites = parkingSites;
-        mParkingSitesPresenter.onDrawParkingSites(parkingSites,mMap);
-    }
-
-    @Override
-    public void showListRoutes(List<Route> routes) {
-        this.routes = routes;
-        mDirectionFinderPresenter.onShowDrivingRouteBetweenTwoLocations(mMap, routes);
+        mMapPresenter.onResumeParkingSites(this,mMap);
     }
 
     @Override
@@ -111,27 +79,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void showMessageOnEmptyParkingSites(String message) {
+    public void showMessageOnEmpty(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
+
     @Override
     public void showProgressDialog(){
-        progressDialog.show();
+        mProgressDialog.show();
     }
 
     @Override
     public  void hideProgressDialog(){
-        progressDialog.dismiss();
+        mProgressDialog.dismiss();
     }
 
-    @Override
-    public void showNearParkingSites()
-    {
-        mDirectionFinderPresenter.onShowNearParkingSites(parkingSites,routes,mMap);
-    }
-
-    @Override
-    public void showNearParkingSitesOnMap(List<ParkingSite> parkingSites, GoogleMap map) {
-        mDirectionFinderPresenter.onShowNearParkingSitesOnMap(parkingSites, map);
-    }
 }

@@ -48,6 +48,6 @@
         android:layout_gravity="right"
         android:layout_marginTop="94dp"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_search"
+        android:id="@+id/btn_searchLocations"
         android:layout_weight="1" />
 </FrameLayout>
