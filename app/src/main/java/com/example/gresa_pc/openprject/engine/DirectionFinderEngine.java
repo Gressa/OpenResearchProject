@@ -7,8 +7,7 @@ package com.example.gresa_pc.openprject.engine;
 import com.example.gresa_pc.openprject.model.GetDirectionSerialized;
 import com.example.gresa_pc.openprject.model.Route;
 import com.example.gresa_pc.openprject.service.GoogleApiService;
-import com.example.gresa_pc.openprject.ui.view.DirectionFinderContract;
-
+import com.example.gresa_pc.openprject.ui.DirectionFinderContract;
 import java.util.List;
 import retrofit2.Callback;
 import retrofit2.Response;

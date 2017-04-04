@@ -11,11 +11,11 @@ import com.example.gresa_pc.openprject.ui.view.MapsView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, MapsView {
     private static final String GOOGLE_API_KEY = "AIzaSyBMXirpILQ3x7CXtTKsA8-H8JQ4ngQmXo4";
@@ -27,6 +27,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Inject
     MapsPresenter mMapPresenter;
+//    @Inject ProgressDialog mProgressDialog;
 
     ProgressDialog mProgressDialog;
 
@@ -54,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         boolean validInputs = mMapPresenter.validateInputs(etFrom.getText().toString(),etTo.getText().toString());
         if(validInputs){
             mMap.clear();
-            mMapPresenter.onResumeDirectionFinder(this,mMap,etFrom.getText().toString(), etTo.getText().toString(), GOOGLE_API_KEY, false);
+            mMapPresenter.onResumeDirectionFinder(this,mMap,etFrom.getText().toString(), etTo.getText().toString(), GOOGLE_API_KEY, true);
         }
     }
 
@@ -70,7 +71,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMapPresenter.onResumeParkingSites(this,mMap);
+        mMapPresenter.onResumeParkingSites(this, mMap);
+        //on Map Click
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                mMapPresenter.chosenRoute(latLng);
+            }
+        });
     }
 
     @Override
@@ -93,4 +101,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mProgressDialog.dismiss();
     }
 
+    @Override
+    public void finish(){
+        super.finish();
+        ((App) getApplication()).releaseAppComponent();
+    }
 }

@@ -12,6 +12,4 @@ import dagger.Component;
 @Component(modules = {AppModule.class})
 public interface AppComponent {
     void inject(MapsActivity mainActivity);
-    void inject(ParkingSitesEngine parkingSitesEngine);
-    void inject(DirectionFinderEngine directionFinderEngine);
 }

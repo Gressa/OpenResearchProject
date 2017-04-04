@@ -1,4 +1,4 @@
-package com.example.gresa_pc.openprject.ui.view;
+package com.example.gresa_pc.openprject.ui;
 
 import com.example.gresa_pc.openprject.model.Route;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 public interface DirectionFinderContract {
     interface LoadListenerDirectionFinder {
         void onLoadedDirectionFinder(List<Route> routes);
-            void onErrorDirectionFinder(String message);
+        void onErrorDirectionFinder(String message);
     }
     void getDirectionRoutes(LoadListenerDirectionFinder listener,String origin, String destination, String key, boolean alternatives);
 }

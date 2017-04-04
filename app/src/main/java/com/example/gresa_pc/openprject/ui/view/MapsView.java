@@ -1,7 +1,5 @@
 package com.example.gresa_pc.openprject.ui.view;
 
-import com.google.android.gms.maps.GoogleMap;
-
 /**
  * Created by Gresa-PC on 4/1/2017.
  */

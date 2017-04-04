@@ -1,4 +1,4 @@
-package com.example.gresa_pc.openprject.ui.view;
+package com.example.gresa_pc.openprject.ui;
 
 import com.example.gresa_pc.openprject.model.ParkingSite;
 import java.util.List;
@@ -12,5 +12,5 @@ public interface ParkingSitesContract {
         void onLoadedParkingSites(List<ParkingSite> parkingSiteList);
         void onErrorParkingSites(String message);
     }
-    void getParkings(LoadListenerParkingSites listener);
+    void getParkingSites(LoadListenerParkingSites listener);
 }

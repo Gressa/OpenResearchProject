@@ -3,11 +3,13 @@ package com.example.gresa_pc.openprject.dagger.modules;
 import android.app.ProgressDialog;
 import android.content.Context;
 import com.example.gresa_pc.openprject.dagger.App;
+import com.example.gresa_pc.openprject.engine.DirectionFinderEngine;
+import com.example.gresa_pc.openprject.engine.ParkingSitesEngine;
 import com.example.gresa_pc.openprject.presenter.MapsPresenter;
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.service.GoogleApiService;
-import com.example.gresa_pc.openprject.ui.view.DirectionFinderContract;
-import com.example.gresa_pc.openprject.ui.view.ParkingSitesContract;
+import com.example.gresa_pc.openprject.ui.DirectionFinderContract;
+import com.example.gresa_pc.openprject.ui.ParkingSitesContract;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javax.inject.Singleton;
@@ -32,32 +34,20 @@ public class AppModule{
     @Provides
     @Singleton
     ParkingSitesContract provideParkingSitesEngine(ApiService mApiService) {
-        return new com.example.gresa_pc.openprject.engine.ParkingSitesEngine(mApiService);
+        return new ParkingSitesEngine(mApiService);
     }
 
     @Provides
     @Singleton
     DirectionFinderContract provideDirectionFinderEngine(GoogleApiService googleApiService){
-        return new com.example.gresa_pc.openprject.engine.DirectionFinderEngine(googleApiService);
+        return new DirectionFinderEngine(googleApiService);
     }
 
     @Provides
     @Singleton
     ProgressDialog provideProgressDialog(){
-        return new ProgressDialog(app.getApplicationContext());
+        return new ProgressDialog(this.app.getApplicationContext());
     }
-
-//    @Provides
-//    @Singleton
-//    ParkingSitesPresenter provideParkingSitesPresenter(ParkingSitesContract parkingSitesEngine){
-//        return new ParkingSitesPresenter(parkingSitesEngine);
-//    }
-//
-//    @Provides
-//    @Singleton
-//    DirectionFinderPresenter provideDirectionFinderPresenter(DirectionFinderContract directionFinderEngine){
-//        return new DirectionFinderPresenter(directionFinderEngine);
-//    }
 
     @Provides
     @Singleton
@@ -73,8 +63,7 @@ public class AppModule{
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.43.53:81/")
-//                .baseUrl("http://192.168.1.109:81/")
+                .baseUrl("http://192.168.0.163:81/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

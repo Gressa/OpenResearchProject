@@ -5,9 +5,9 @@ import com.example.gresa_pc.openprject.R;
 import com.example.gresa_pc.openprject.model.Location;
 import com.example.gresa_pc.openprject.model.ParkingSite;
 import com.example.gresa_pc.openprject.model.Route;
-import com.example.gresa_pc.openprject.ui.view.DirectionFinderContract;
+import com.example.gresa_pc.openprject.ui.DirectionFinderContract;
 import com.example.gresa_pc.openprject.ui.view.MapsView;
-import com.example.gresa_pc.openprject.ui.view.ParkingSitesContract;
+import com.example.gresa_pc.openprject.ui.ParkingSitesContract;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -29,6 +29,7 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
     private MapsView mView;
     private DirectionFinderContract mIDirectionFinderEngine;
     private List<ParkingSite> mParkingSites;
+    private List<Route> routes;
     private GoogleMap mMap;
 
     public MapsPresenter(DirectionFinderContract iDirectionFinderEngine, ParkingSitesContract iParkingSitesEngine){
@@ -47,7 +48,7 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
         this.mView = view;
         this.mMap = mMap;
         mView.showProgressDialog();
-        mIParkingSiteEngine.getParkings(this);
+        mIParkingSiteEngine.getParkingSites(this);
     }
     @Override
     public void onLoadedParkingSites(List<ParkingSite> parkingSiteList) {
@@ -79,6 +80,7 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
 
     @Override
     public void onLoadedDirectionFinder(List<Route> routes) {
+        this.routes = routes;
         showPathBetweenTwoLocations(routes);
         showListRoutes(routes, this.mParkingSites);
         mView.hideProgressDialog();
@@ -110,15 +112,30 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
             mView.showMessageOnEmpty("There is no routes");
         }
         else{
-        for(Route route: routes) {
-            String routePolyLine = route.getOverviewPolyline().getPoints();
-            List<LatLng> list = decode(routePolyLine);
+            int index = 0;
+            List<LatLng> directRoute = null;
+            for(Route route: routes) {
+                String routePolyLine = route.getOverviewPolyline().getPoints();
+                List<LatLng> list = decode(routePolyLine);
+                if(index == 0){
+                    directRoute = list;
+                }
+                else {
+                    mMap.addPolyline(new PolylineOptions()
+                            .addAll(list)
+                            .width(15)
+                            .color(Color.GRAY)
+                            .geodesic(true));
+                }
+                index++;
+            }
+            //draw direct route
             mMap.addPolyline(new PolylineOptions()
-                    .addAll(list)
+                    .addAll(directRoute)
                     .width(15)
                     .color(Color.BLUE)
                     .geodesic(true));
-        }
+
         }
     }
 
@@ -127,14 +144,52 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
         for(ParkingSite parkingSite: parkingSites) {
             Location location = parkingSite.getLocation();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            int index = 0;
             for (Route route: routes) {
-                String routePolyLine = route.getOverviewPolyline().getPoints();
-                List<LatLng> list = decode(routePolyLine);
-                if(PolyUtil.isLocationOnPath(latLng,list,true,100)){
-                    nearParkingSites.add(parkingSite);
+                if(index == 0)
+                    {
+                    String routePolyLine = route.getOverviewPolyline().getPoints();
+                    List<LatLng> list = decode(routePolyLine);
+                    if(PolyUtil.isLocationOnPath(latLng,list,true,100)){
+                        nearParkingSites.add(parkingSite);
+                    }
                 }
+                index++;
             }
         }
         showParkingSites(nearParkingSites,7);
+    }
+
+    public void chosenRoute(LatLng latLng){
+        mMap.clear();
+        List<Route> selectedRoute = new ArrayList<>();
+        List<LatLng> listLatLngSelectedRoute = null;
+        for (Route route : routes) {
+                String routePolyLine = route.getOverviewPolyline().getPoints();
+                List<LatLng> listLatLng = decode(routePolyLine);
+                //if we have more than one route choose first route
+                if( selectedRoute.isEmpty() && PolyUtil.isLocationOnEdge(latLng,listLatLng,true,1000)){
+                    selectedRoute.add(route);
+                    listLatLngSelectedRoute = listLatLng;
+                } else {
+                    mMap.addPolyline(new PolylineOptions()
+                            .addAll(listLatLng)
+                            .width(15)
+                            .color(Color.GRAY)
+                            .geodesic(true));
+                }
+            }
+
+        if(!selectedRoute.isEmpty() && !mParkingSites.isEmpty() && mParkingSites!=null) {
+            mMap.addPolyline(new PolylineOptions()
+                    .addAll(listLatLngSelectedRoute)
+                    .width(15)
+                    .color(Color.BLUE)
+                    .geodesic(true));
+            showListRoutes(selectedRoute, mParkingSites);
+        }
+        else {
+            mView.showMessageOnEmpty("Please click on Polyline");
+        }
     }
 }
