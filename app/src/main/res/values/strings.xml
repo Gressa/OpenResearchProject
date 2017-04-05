@@ -2,7 +2,12 @@
     <string name="app_name">Openprject</string>
     <string name="title_activity_maps">Map</string>
     <string name="btn_search">Search</string>
-    <string name="from">From: </string>
-    <string name="to">To: </string>
+    <string name="from">From </string>
+    <string name="to">To </string>
     <string name="fillTextFields">Please fill text fields</string>
+    <string name="direction">Direction</string>
+    <string name="loading">Loading</string>
+    <string name="noParking">There are no Parking Sites</string>
+    <string name="noRoute">There are no Routes</string>
+    <string name="clickPolyline">Please click on Polyline</string>
 </resources>

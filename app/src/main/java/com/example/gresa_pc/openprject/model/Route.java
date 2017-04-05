@@ -4,7 +4,6 @@ package com.example.gresa_pc.openprject.model;
  * Created by Gresa-PC on 3/26/2017.
  */
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

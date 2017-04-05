@@ -14,7 +14,7 @@ import retrofit2.Response;
  */
 
 public class ParkingSitesEngine implements ParkingSitesContract {
-    private ApiService mApiService;
+    private final ApiService mApiService;
 
     public ParkingSitesEngine(ApiService mApiService){
         this.mApiService = mApiService;

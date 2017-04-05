@@ -1,6 +1,5 @@
 package com.example.gresa_pc.openprject.dagger.modules;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.engine.DirectionFinderEngine;
@@ -20,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class AppModule{
-    private App app;
+    private final App app;
 
     public AppModule(App app) {
         this.app = app;
@@ -43,11 +42,11 @@ public class AppModule{
         return new DirectionFinderEngine(googleApiService);
     }
 
-    @Provides
-    @Singleton
-    ProgressDialog provideProgressDialog(){
-        return new ProgressDialog(this.app.getApplicationContext());
-    }
+//    @Provides
+//    @Singleton
+//    ProgressDialog provideProgressDialog(){
+//        return new ProgressDialog(this.app.getApplicationContext());
+//    }
 
     @Provides
     @Singleton
@@ -63,7 +62,7 @@ public class AppModule{
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.0.163:81/")
+                .baseUrl("http://192.168.1.107:81/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

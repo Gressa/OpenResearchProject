@@ -8,5 +8,7 @@ public interface MapsView {
         void showMessageOnFailure(String message);
         void showProgressDialog();
         void hideProgressDialog();
-        void showMessageOnEmpty(String message);
+        void showDetails(String[] detail);
+        void showEmptyRouteMessage();
+        void showEmptyParkingMessage();
 }

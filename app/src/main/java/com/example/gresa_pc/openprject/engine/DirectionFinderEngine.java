@@ -17,7 +17,7 @@ import retrofit2.Response;
  */
 
 public class DirectionFinderEngine implements DirectionFinderContract {
-    private GoogleApiService googleApiService;
+    private final GoogleApiService googleApiService;
 
     public DirectionFinderEngine(GoogleApiService googleApiService) {
         this.googleApiService = googleApiService;

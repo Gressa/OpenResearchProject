@@ -17,7 +17,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import static com.google.maps.android.PolyUtil.decode;
 
 /**
@@ -25,12 +27,18 @@ import static com.google.maps.android.PolyUtil.decode;
  */
 
 public class MapsPresenter implements DirectionFinderContract.LoadListenerDirectionFinder, ParkingSitesContract.LoadListenerParkingSites{
-    private ParkingSitesContract mIParkingSiteEngine;
+    private final Integer ZOOM_INDEX_HIGH = 15;
+    private final Integer ZOOM_INDEX_LOW = 7;
+    private final Integer POLYLINE_WIDTH = 15;
+    private final Integer TOLERANCE = 100;
+    private final ParkingSitesContract mIParkingSiteEngine;
     private MapsView mView;
-    private DirectionFinderContract mIDirectionFinderEngine;
+    private final DirectionFinderContract mIDirectionFinderEngine;
     private List<ParkingSite> mParkingSites;
     private List<Route> routes;
     private GoogleMap mMap;
+    private Map<Route,String> detailRoute;
+    private String[] detailButton;
 
     public MapsPresenter(DirectionFinderContract iDirectionFinderEngine, ParkingSitesContract iParkingSitesEngine){
         this.mIDirectionFinderEngine = iDirectionFinderEngine;
@@ -54,12 +62,11 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
     public void onLoadedParkingSites(List<ParkingSite> parkingSiteList) {
         this.mParkingSites = parkingSiteList;
         if(mParkingSites != null && mParkingSites.size()>0){
-            showParkingSites(mParkingSites,15);
+            showParkingSites(mParkingSites,ZOOM_INDEX_HIGH);
             mView.hideProgressDialog();
         }
         else {
-            String message = "There is no Parking Sites";
-            mView.showMessageOnEmpty(message);
+            mView.showEmptyParkingMessage();
             mView.hideProgressDialog();
         }
     }
@@ -82,7 +89,9 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
     public void onLoadedDirectionFinder(List<Route> routes) {
         this.routes = routes;
         showPathBetweenTwoLocations(routes);
-        showListRoutes(routes, this.mParkingSites);
+        List<ParkingSite> nearParkingSites = showListRoutes(routes, this.mParkingSites);
+        showParkingSites(nearParkingSites,ZOOM_INDEX_LOW);
+        mView.showDetails(detailButton);
         mView.hideProgressDialog();
     }
 
@@ -92,7 +101,7 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
         mView.hideProgressDialog();
     }
 
-    public void showParkingSites(List<ParkingSite> parkingSites, int zoomIndex) {
+    private void showParkingSites(List<ParkingSite> parkingSites, int zoomIndex) {
         for (ParkingSite parkingSite : parkingSites) {
             Location location = parkingSite.getLocation();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -101,45 +110,52 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
                     .position(latLng).title(parkingSite.getTitle()));
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(latLng)             // Sets the center of the map to Mountain View
-                    .zoom(zoomIndex)                    // Sets the zoom
+                    .zoom(zoomIndex)            // Sets the zoom
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
     }
 
-    public void showPathBetweenTwoLocations(List<Route> routes){
+    private void showPathBetweenTwoLocations(List<Route> routes){
+        detailRoute = new HashMap<>();
+        detailButton = new String[routes.size()];
         if(routes.size() == 0 || routes.isEmpty()) {
-            mView.showMessageOnEmpty("There is no routes");
+            mView.showEmptyRouteMessage();
         }
         else{
             int index = 0;
-            List<LatLng> directRoute = null;
+            List<LatLng> fastestRoute = new ArrayList<>();
             for(Route route: routes) {
                 String routePolyLine = route.getOverviewPolyline().getPoints();
                 List<LatLng> list = decode(routePolyLine);
+                String duration = route.getLegs().get(0).getDuration().getText();
+                String distance = route.getLegs().get(0).getDistance().getText();
+                duration = parseDetails(duration);
+                String detail = duration+" "+distance;
+                detailButton[index]= detail;
+                detailRoute.put(route,detail);
                 if(index == 0){
-                    directRoute = list;
+                    fastestRoute = list;
                 }
                 else {
                     mMap.addPolyline(new PolylineOptions()
                             .addAll(list)
-                            .width(15)
+                            .width(POLYLINE_WIDTH)
                             .color(Color.GRAY)
                             .geodesic(true));
                 }
                 index++;
             }
-            //draw direct route
+            //draw fastest route
             mMap.addPolyline(new PolylineOptions()
-                    .addAll(directRoute)
-                    .width(15)
+                    .addAll(fastestRoute)
+                    .width(POLYLINE_WIDTH)
                     .color(Color.BLUE)
                     .geodesic(true));
-
         }
     }
 
-    public void showListRoutes(List<Route> routes, List<ParkingSite> parkingSites){
+    private List<ParkingSite> showListRoutes(List<Route> routes, List<ParkingSite> parkingSites){
         List<ParkingSite> nearParkingSites = new ArrayList<>();
         for(ParkingSite parkingSite: parkingSites) {
             Location location = parkingSite.getLocation();
@@ -150,46 +166,68 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
                     {
                     String routePolyLine = route.getOverviewPolyline().getPoints();
                     List<LatLng> list = decode(routePolyLine);
-                    if(PolyUtil.isLocationOnPath(latLng,list,true,100)){
+                    if(PolyUtil.isLocationOnPath(latLng,list,true,TOLERANCE)){
                         nearParkingSites.add(parkingSite);
                     }
                 }
                 index++;
             }
         }
-        showParkingSites(nearParkingSites,7);
+        return nearParkingSites;
     }
 
-    public void chosenRoute(LatLng latLng){
+
+
+    public void selectRoute(String detail){
         mMap.clear();
         List<Route> selectedRoute = new ArrayList<>();
-        List<LatLng> listLatLngSelectedRoute = null;
+        for(Map.Entry<Route,String> route: detailRoute.entrySet()){
+            if(route.getValue().equals(detail)){
+                selectedRoute.add(route.getKey());
+            }
+        }
+
         for (Route route : routes) {
+            if (route != selectedRoute.get(0)) {
                 String routePolyLine = route.getOverviewPolyline().getPoints();
                 List<LatLng> listLatLng = decode(routePolyLine);
-                //if we have more than one route choose first route
-                if( selectedRoute.isEmpty() && PolyUtil.isLocationOnEdge(latLng,listLatLng,true,1000)){
-                    selectedRoute.add(route);
-                    listLatLngSelectedRoute = listLatLng;
-                } else {
-                    mMap.addPolyline(new PolylineOptions()
-                            .addAll(listLatLng)
-                            .width(15)
-                            .color(Color.GRAY)
-                            .geodesic(true));
-                }
+                mMap.addPolyline(new PolylineOptions()
+                        .addAll(listLatLng)
+                        .width(POLYLINE_WIDTH)
+                        .color(Color.GRAY)
+                        .geodesic(true));
             }
-
-        if(!selectedRoute.isEmpty() && !mParkingSites.isEmpty() && mParkingSites!=null) {
+        }
+        String routePolyLine = selectedRoute.get(0).getOverviewPolyline().getPoints();
+        List<LatLng> listLatLngSelectedRoute = decode(routePolyLine);
+        if(!mParkingSites.isEmpty() && mParkingSites!=null) {
             mMap.addPolyline(new PolylineOptions()
                     .addAll(listLatLngSelectedRoute)
-                    .width(15)
+                    .width(POLYLINE_WIDTH)
                     .color(Color.BLUE)
                     .geodesic(true));
-            showListRoutes(selectedRoute, mParkingSites);
+            List<ParkingSite> nearParkingSites = showListRoutes(selectedRoute, mParkingSites);
+            showParkingSites(nearParkingSites,ZOOM_INDEX_LOW);
+        }
+    }
+
+
+    private String parseDetails(String duration){
+        String[] parseDuration = duration.split(" ");
+        if(parseDuration.length == 2){
+            parseDuration[0] = "00:"+parseDuration[0]+"h";
         }
         else {
-            mView.showMessageOnEmpty("Please click on Polyline");
+            if(parseDuration[1].equals("day")){
+                parseDuration[0] = parseDuration[0]+"d "+parseDuration[2]+"h";
+            }
+            else {
+                if (parseDuration[2].length() == 1) {
+                    parseDuration[2] = "0" + parseDuration[2];
+                }
+                parseDuration[0] = parseDuration[0] + ":" + parseDuration[2] + "h";
+            }
         }
+        return parseDuration[0];
     }
 }
