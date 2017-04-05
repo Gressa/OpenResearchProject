@@ -24,7 +24,7 @@
             android:id="@+id/guideline2"
             android:orientation="vertical"
             tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="330dp"
+            tools:layout_editor_absoluteX="0dp"
             app:layout_constraintGuide_percent="0.859375"
             android:layout_height="118dp" />
 

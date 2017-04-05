@@ -3,7 +3,7 @@ package com.example.gresa_pc.openprject.engine;
 import com.example.gresa_pc.openprject.model.ParkingSite;
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.model.ParkingSiteLocation;
-import com.example.gresa_pc.openprject.ui.ParkingSitesContract;
+
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;

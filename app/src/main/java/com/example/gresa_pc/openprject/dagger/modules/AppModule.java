@@ -7,8 +7,8 @@ import com.example.gresa_pc.openprject.engine.ParkingSitesEngine;
 import com.example.gresa_pc.openprject.presenter.MapsPresenter;
 import com.example.gresa_pc.openprject.service.ApiService;
 import com.example.gresa_pc.openprject.service.GoogleApiService;
-import com.example.gresa_pc.openprject.ui.DirectionFinderContract;
-import com.example.gresa_pc.openprject.ui.ParkingSitesContract;
+import com.example.gresa_pc.openprject.engine.DirectionFinderContract;
+import com.example.gresa_pc.openprject.engine.ParkingSitesContract;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javax.inject.Singleton;
@@ -42,12 +42,6 @@ public class AppModule{
         return new DirectionFinderEngine(googleApiService);
     }
 
-//    @Provides
-//    @Singleton
-//    ProgressDialog provideProgressDialog(){
-//        return new ProgressDialog(this.app.getApplicationContext());
-//    }
-
     @Provides
     @Singleton
     MapsPresenter provideMapPresenter(DirectionFinderContract iDirectionFinderEngine, ParkingSitesContract iParkingSitesEngine){
@@ -66,8 +60,8 @@ public class AppModule{
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        ApiService service = retrofit.create(ApiService.class);
-        return  service;
+        ApiService apiService = retrofit.create(ApiService.class);
+        return  apiService;
     }
 
 
@@ -83,7 +77,7 @@ public class AppModule{
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        GoogleApiService service = retrofit.create(GoogleApiService.class);
-        return  service;
+        GoogleApiService googleApiService = retrofit.create(GoogleApiService.class);
+        return  googleApiService;
     }
 }

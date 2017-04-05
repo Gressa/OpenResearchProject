@@ -1,4 +1,4 @@
-package com.example.gresa_pc.openprject.ui.view;
+package com.example.gresa_pc.openprject.view;
 
 /**
  * Created by Gresa-PC on 4/1/2017.

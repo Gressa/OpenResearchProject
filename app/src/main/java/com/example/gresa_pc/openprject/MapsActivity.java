@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.presenter.MapsPresenter;
-import com.example.gresa_pc.openprject.ui.view.MapsView;
+import com.example.gresa_pc.openprject.view.MapsView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
