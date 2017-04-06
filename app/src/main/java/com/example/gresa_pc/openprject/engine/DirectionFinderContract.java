@@ -10,7 +10,9 @@ import java.util.List;
 public interface DirectionFinderContract {
     interface LoadListenerDirectionFinder {
         void onLoadedDirectionFinder(List<Route> routes);
+
         void onErrorDirectionFinder(String message);
     }
-    void getDirectionRoutes(LoadListenerDirectionFinder listener,String origin, String destination, String key, boolean alternatives);
+
+    void getDirectionRoutes(LoadListenerDirectionFinder listener, String origin, String destination, String key, boolean alternatives);
 }

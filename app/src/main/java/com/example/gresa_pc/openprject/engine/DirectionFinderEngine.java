@@ -9,6 +9,8 @@ import com.example.gresa_pc.openprject.model.Route;
 import com.example.gresa_pc.openprject.service.GoogleApiService;
 
 import java.util.List;
+
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -24,11 +26,11 @@ public class DirectionFinderEngine implements DirectionFinderContract {
     }
 
     @Override
-    public void getDirectionRoutes(final LoadListenerDirectionFinder listener, String origin, String destination, String key, boolean alternatives){
+    public void getDirectionRoutes(final LoadListenerDirectionFinder listener, String origin, String destination, String key, boolean alternatives) {
         retrofit2.Call<GetDirectionSerialized> call = googleApiService.getDirectionRoute(origin, destination, key, alternatives);
         call.enqueue(new Callback<GetDirectionSerialized>() {
             @Override
-            public void onResponse(retrofit2.Call<GetDirectionSerialized> call, Response<GetDirectionSerialized> response) {
+            public void onResponse(Call<GetDirectionSerialized> call, Response<GetDirectionSerialized> response) {
                 List<Route> routes = response.body().getRoutes();
                 listener.onLoadedDirectionFinder(routes);
             }

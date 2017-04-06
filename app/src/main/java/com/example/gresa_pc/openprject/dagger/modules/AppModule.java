@@ -1,6 +1,7 @@
 package com.example.gresa_pc.openprject.dagger.modules;
 
 import android.content.Context;
+
 import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.engine.DirectionFinderEngine;
 import com.example.gresa_pc.openprject.engine.ParkingSitesEngine;
@@ -11,21 +12,24 @@ import com.example.gresa_pc.openprject.engine.DirectionFinderContract;
 import com.example.gresa_pc.openprject.engine.ParkingSitesContract;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
-public class AppModule{
+public class AppModule {
     private final App app;
 
     public AppModule(App app) {
         this.app = app;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     public Context provideContext() {
         return app.getApplicationContext();
     }
@@ -38,14 +42,14 @@ public class AppModule{
 
     @Provides
     @Singleton
-    DirectionFinderContract provideDirectionFinderEngine(GoogleApiService googleApiService){
+    DirectionFinderContract provideDirectionFinderEngine(GoogleApiService googleApiService) {
         return new DirectionFinderEngine(googleApiService);
     }
 
     @Provides
     @Singleton
-    MapsPresenter provideMapPresenter(DirectionFinderContract iDirectionFinderEngine, ParkingSitesContract iParkingSitesEngine){
-        return new MapsPresenter(iDirectionFinderEngine,iParkingSitesEngine);
+    MapsPresenter provideMapPresenter(DirectionFinderContract directionFinderContract, ParkingSitesContract parkingSitesContract) {
+        return new MapsPresenter(directionFinderContract, parkingSitesContract);
     }
 
     @Provides
@@ -61,7 +65,7 @@ public class AppModule{
                 .build();
 
         ApiService apiService = retrofit.create(ApiService.class);
-        return  apiService;
+        return apiService;
     }
 
 
@@ -78,6 +82,6 @@ public class AppModule{
                 .build();
 
         GoogleApiService googleApiService = retrofit.create(GoogleApiService.class);
-        return  googleApiService;
+        return googleApiService;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.gresa_pc.openprject.engine;
 
 import com.example.gresa_pc.openprject.model.ParkingSite;
+
 import java.util.List;
 
 /**
@@ -10,7 +11,9 @@ import java.util.List;
 public interface ParkingSitesContract {
     interface LoadListenerParkingSites {
         void onLoadedParkingSites(List<ParkingSite> parkingSiteList);
+
         void onErrorParkingSites(String message);
     }
+
     void getParkingSites(LoadListenerParkingSites listener);
 }

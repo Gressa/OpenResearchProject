@@ -1,6 +1,5 @@
 package com.example.gresa_pc.openprject;
 
-import android.app.ProgressDialog;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -9,13 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.presenter.MapsPresenter;
 import com.example.gresa_pc.openprject.view.MapsView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -50,35 +52,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @OnClick(R.id.btn_searchLocations)
-    public void btn_searchLocations(){
-        boolean validInputs = mMapPresenter.validateInputs(etFrom.getText().toString(),etTo.getText().toString());
-        if(validInputs){
+    public void btn_searchLocations() {
+        boolean validInputs = mMapPresenter.validateInputs(etFrom.getText().toString(), etTo.getText().toString());
+        if (validInputs) {
             mMap.clear();
             hideButtons();
-            mMapPresenter.onResumeDirectionFinder(this,mMap,etFrom.getText().toString(), etTo.getText().toString(), getResources().getString(R.string.google_maps_key), true);
-        }
-        else{
-            Toast.makeText(this,getResources().getString(R.string.fillTextFields),Toast.LENGTH_SHORT).show();
+            mMapPresenter.onResumeDirectionFinder(this, mMap, etFrom.getText().toString(), etTo.getText().toString(), getResources().getString(R.string.google_maps_key), true);
+        } else {
+            Toast.makeText(this, getResources().getString(R.string.fillTextFields), Toast.LENGTH_SHORT).show();
         }
     }
+
     @OnClick(R.id.button2)
-    public void button2(){
+    public void button2() {
         resetButtonsColor();
-        rootDetail1.setBackgroundColor(ContextCompat.getColor(this,R.color.blue_light));
+        rootDetail1.setBackgroundColor(ContextCompat.getColor(this, R.color.blue_light));
+        rootDetail1.setTextColor(ContextCompat.getColor(this, R.color.white));
         mMapPresenter.selectRoute(rootDetail1.getText().toString());
     }
 
     @OnClick(R.id.button3)
-    public void button3(){
+    public void button3() {
         resetButtonsColor();
-        rootDetail2.setBackgroundColor(ContextCompat.getColor(this,R.color.blue_light));
+        rootDetail2.setBackgroundColor(ContextCompat.getColor(this, R.color.blue_light));
+        rootDetail2.setTextColor(ContextCompat.getColor(this, R.color.white));
         mMapPresenter.selectRoute(rootDetail2.getText().toString());
     }
 
     @OnClick(R.id.button4)
-    public void button4(){
+    public void button4() {
         resetButtonsColor();
-        rootDetail3.setBackgroundColor(ContextCompat.getColor(this,R.color.blue_light));
+        rootDetail3.setBackgroundColor(ContextCompat.getColor(this, R.color.blue_light));
+        rootDetail3.setTextColor(ContextCompat.getColor(this, R.color.white));
         mMapPresenter.selectRoute(rootDetail3.getText().toString());
     }
 
@@ -99,62 +104,69 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void showMessageOnFailure(String message) {
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showEmptyRouteMessage(){
-        Toast.makeText(this,getString(R.string.noRoute),Toast.LENGTH_SHORT).show();
+    public void showEmptyRouteMessage() {
+        Toast.makeText(this, getString(R.string.noRoute), Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showEmptyParkingMessage(){
-        Toast.makeText(this,getString(R.string.noParking),Toast.LENGTH_SHORT).show();
+    public void showEmptyParkingMessage() {
+        Toast.makeText(this, getString(R.string.noParking), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void showDetails(String[] details) {
-            resetButtonsColor();
-            if (details.length == 1) {
-                rootDetail1.setVisibility(View.VISIBLE);
-                rootDetail1.setText(details[0]);
-                rootDetail1.setBackgroundColor(ContextCompat.getColor(this,R.color.blue_light));
-            }
-            else if(details.length == 2){
-                rootDetail1.setVisibility(View.VISIBLE);
-                rootDetail1.setText(details[0]);
-                rootDetail1.setBackgroundColor(ContextCompat.getColor(this,R.color.blue_light));
-                rootDetail2.setVisibility(View.VISIBLE);
-                rootDetail2.setText(details[1]);
-            }
-            else if(details.length == 3){
-                rootDetail1.setVisibility(View.VISIBLE);
-                rootDetail1.setText(details[0]);
-                rootDetail1.setBackgroundColor(ContextCompat.getColor(this,R.color.blue_light));
-                rootDetail2.setVisibility(View.VISIBLE);
-                rootDetail2.setText(details[1]);
-                rootDetail3.setVisibility(View.VISIBLE);
-                rootDetail3.setText(details[2]);
-            }
+        resetButtonsColor();
+        if (details.length == 1) {
+            rootDetail1.setVisibility(View.VISIBLE);
+            rootDetail1.setText(details[0]);
+            rootDetail1.setTextColor(ContextCompat.getColor(this, R.color.white));
+            rootDetail1.setBackgroundColor(ContextCompat.getColor(this, R.color.blue_light));
+        } else if (details.length == 2) {
+            rootDetail1.setVisibility(View.VISIBLE);
+            rootDetail1.setText(details[0]);
+            rootDetail1.setTextColor(ContextCompat.getColor(this, R.color.white));
+            rootDetail1.setBackgroundColor(ContextCompat.getColor(this, R.color.blue_light));
+            rootDetail2.setVisibility(View.VISIBLE);
+            rootDetail2.setText(details[1]);
+            rootDetail2.setTextColor(ContextCompat.getColor(this, R.color.blue_light));
+        } else if (details.length == 3) {
+            rootDetail1.setVisibility(View.VISIBLE);
+            rootDetail1.setText(details[0]);
+            rootDetail1.setBackgroundColor(ContextCompat.getColor(this, R.color.blue_light));
+            rootDetail1.setTextColor(ContextCompat.getColor(this, R.color.white));
+            rootDetail2.setVisibility(View.VISIBLE);
+            rootDetail2.setText(details[1]);
+            rootDetail2.setTextColor(ContextCompat.getColor(this, R.color.blue_light));
+            rootDetail3.setVisibility(View.VISIBLE);
+            rootDetail3.setText(details[2]);
+            rootDetail3.setTextColor(ContextCompat.getColor(this, R.color.blue_light));
+        }
     }
 
     @Override
-    public void showProgressDialog(){
+    public void showProgressDialog() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public  void hideProgressDialog(){
+    public void hideProgressDialog() {
         progressBar.setVisibility(View.GONE);
     }
 
-    private void resetButtonsColor(){
-        rootDetail1.setBackgroundColor(ContextCompat.getColor(this,R.color.white));
-        rootDetail2.setBackgroundColor(ContextCompat.getColor(this,R.color.white));
-        rootDetail3.setBackgroundColor(ContextCompat.getColor(this,R.color.white));
+    private void resetButtonsColor() {
+        rootDetail1.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        rootDetail1.setTextColor(ContextCompat.getColor(this, R.color.blue_light));
+        rootDetail2.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        rootDetail2.setTextColor(ContextCompat.getColor(this, R.color.blue_light));
+        rootDetail3.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        rootDetail3.setTextColor(ContextCompat.getColor(this, R.color.blue_light));
     }
 
-    private void hideButtons(){
+    private void hideButtons() {
         rootDetail1.setVisibility(View.GONE);
         rootDetail2.setVisibility(View.GONE);
         rootDetail3.setVisibility(View.GONE);

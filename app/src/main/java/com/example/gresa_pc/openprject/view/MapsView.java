@@ -5,10 +5,15 @@ package com.example.gresa_pc.openprject.view;
  */
 
 public interface MapsView {
-        void showMessageOnFailure(String message);
-        void showProgressDialog();
-        void hideProgressDialog();
-        void showDetails(String[] detail);
-        void showEmptyRouteMessage();
-        void showEmptyParkingMessage();
+    void showMessageOnFailure(String message);
+
+    void showProgressDialog();
+
+    void hideProgressDialog();
+
+    void showDetails(String[] detail);
+
+    void showEmptyRouteMessage();
+
+    void showEmptyParkingMessage();
 }
