@@ -14,6 +14,14 @@
         tools:context="com.example.gresa_pc.openprject.MapsActivity"
         />
 
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        />
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:background="@drawable/background_bg"

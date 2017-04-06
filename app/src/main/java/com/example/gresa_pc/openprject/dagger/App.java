@@ -19,10 +19,6 @@ public class App extends Application {
         return appComponent;
     }
 
-    public void releaseAppComponent(){
-        appComponent = null;
-    }
-
     public void inject(MapsActivity activity) {
         appComponent.inject(activity);
     }

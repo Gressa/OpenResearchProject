@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.gresa_pc.openprject.dagger.App;
 import com.example.gresa_pc.openprject.presenter.MapsPresenter;
@@ -21,7 +22,6 @@ import butterknife.OnClick;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, MapsView {
     private GoogleMap mMap;
-    private ProgressDialog mProgressDialog;
     @BindView(R.id.etFrom)
     EditText etFrom;
     @BindView(R.id.etTo)
@@ -32,6 +32,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Button rootDetail2;
     @BindView(R.id.button4)
     Button rootDetail3;
+    @BindView(R.id.progress)
+    ProgressBar progressBar;
     @Inject
     MapsPresenter mMapPresenter;
 
@@ -42,8 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ButterKnife.bind(this);
         ((App) getApplication()).getAppComponent().inject(this);
         hideButtons();
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -140,18 +140,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void showProgressDialog(){
-        mProgressDialog.show();
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public  void hideProgressDialog(){
-        mProgressDialog.dismiss();
-    }
-
-    @Override
-    public void finish(){
-        super.finish();
-        ((App) getApplication()).releaseAppComponent();
+        progressBar.setVisibility(View.GONE);
     }
 
     private void resetButtonsColor(){

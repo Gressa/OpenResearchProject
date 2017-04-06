@@ -114,6 +114,7 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
+        mView.hideProgressDialog();
     }
 
     private void showPathBetweenTwoLocations(List<Route> routes){
@@ -179,6 +180,7 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
 
 
     public void selectRoute(String detail){
+        mView.showProgressDialog();
         mMap.clear();
         List<Route> selectedRoute = new ArrayList<>();
         for(Map.Entry<Route,String> route: detailRoute.entrySet()){
