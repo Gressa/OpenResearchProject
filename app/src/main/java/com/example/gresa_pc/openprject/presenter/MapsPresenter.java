@@ -215,6 +215,10 @@ public class MapsPresenter implements DirectionFinderContract.LoadListenerDirect
     private String parseDetails(String duration) {
         String[] parseDuration = duration.split(" ");
         if (parseDuration.length == 2) {
+            if(parseDuration[0].length() == 1)
+            {
+                parseDuration[0] = "0"+parseDuration[0];
+            }
             parseDuration[0] = "00:" + parseDuration[0] + "h";
         } else {
             if (parseDuration[1].equals("day")) {
